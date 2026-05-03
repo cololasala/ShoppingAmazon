@@ -1,10 +1,12 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import CustomBottomSheet from "@/components/shared/CustomBottomSheet";
+import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useRef, useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
 const Profile = () => {
   // ref
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const [open, setOpen] = useState<boolean>(false);
   // callbacks
@@ -12,25 +14,35 @@ const Profile = () => {
     console.log("handleSheetChanges", index);
   }, []);
 
+  const bottomSheetRef2 = useRef<BottomSheetModal>(null);
+
   return (
-    <View style={styles.container}>
-      <Text>Profile</Text>
-      <Button
-        title="Open Bottom Sheet"
-        onPress={() => bottomSheetRef.current?.expand()}
-      />
-      <BottomSheet
+    <>
+      <View style={styles.container}>
+        <Text>Profile</Text>
+        <Button
+          title="Open Bottom Sheet"
+          onPress={() => bottomSheetRef.current?.present()}
+        />
+        <Button
+          title="Open Bottom Sheet"
+          onPress={() => bottomSheetRef2.current?.expand()}
+        />
+        <CustomBottomSheet
+          title={"Awesome"}
+          panDownClose={false}
+          ref={bottomSheetRef2}
+          content={<Text>Awesome s</Text>}
+        ></CustomBottomSheet>
+      </View>
+
+      <CustomBottomSheetModal
+        title={"Awesome"}
+        panDownClose={true}
         ref={bottomSheetRef}
-        index={-1}
-        animateOnMount={true}
-        enablePanDownToClose={true}
-        enableDynamicSizing={true}
-      >
-        <BottomSheetView style={styles.contentContainer}>
-          <Text>Awesome 🎉</Text>
-        </BottomSheetView>
-      </BottomSheet>
-    </View>
+        content={<Text>Awesome 🎉</Text>}
+      ></CustomBottomSheetModal>
+    </>
   );
 };
 

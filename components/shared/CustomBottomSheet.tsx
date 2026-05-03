@@ -1,10 +1,13 @@
+import Icon from "@expo/vector-icons/Ionicons";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { forwardRef } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 interface CustomBottomSheetProps {
   title: string;
+  panDownClose: boolean;
   snapPoints?: string[];
+  content: any;
 }
 
 type Ref = BottomSheet;
@@ -13,17 +16,32 @@ type Ref = BottomSheet;
 const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(
   (props, ref) => {
     const snapPoints = props.snapPoints || ["50%"];
+
+    const onPressClose = () => {
+      if (ref && typeof ref !== "function") {
+        ref.current?.close();
+      }
+    };
+
     return (
       <BottomSheet
         ref={ref}
-        index={0}
+        index={-1}
         snapPoints={snapPoints}
         animateOnMount={true}
-        enablePanDownToClose={true}
-        enableDynamicSizing={true}
+        enablePanDownToClose={props.panDownClose}
+        enableDynamicSizing={false}
       >
-        <BottomSheetView style={styles.contentContainer}>
-          <Text>{props.title}</Text>
+        <BottomSheetView style={styles.mainContainer}>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <Icon
+              name="close"
+              color={"black"}
+              size={24}
+              onPress={onPressClose}
+            />
+          </View>
+          <View style={styles.contentContainer}>{props.content}</View>
         </BottomSheetView>
       </BottomSheet>
     );
@@ -33,9 +51,11 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(
 export default CustomBottomSheet;
 
 const styles = StyleSheet.create({
-  contentContainer: {
+  mainContainer: {
     flex: 1,
-    padding: 36,
+    paddingHorizontal: 20,
+  },
+  contentContainer: {
     alignItems: "center",
   },
 });

@@ -19,7 +19,7 @@ export default function HeaderSearch() {
   useDebouncedCallback(
     () => {
       if (query) router.setParams({ query });
-      if (segments.length === 1 && segments[0] === "(search)") {
+      if (segments.length === 1 && segments[0] === ("(search)" as any)) {
         ref.current?.focus();
       }
     },
