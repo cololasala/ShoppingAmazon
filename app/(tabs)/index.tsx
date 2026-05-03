@@ -1,98 +1,113 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import DeliveryLocation from "@/components/shared/DeliveryLocation";
+import { HeaderTabsProps } from "@/components/shared/header/HeaderTabs";
+import HomeCarousel from "@/components/shared/Screen/HomeCarousel";
+import HomeSuggestions from "@/components/shared/Screen/HomeSuggestions";
+import { deals } from "@/dummy_data/product_deal";
+import { Product } from "@/types/product";
+import { AmazonEmberBold } from "@/utils/constants/constants";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { router } from "expo-router";
+import { useNavigation } from "expo-router/build/exports";
+import React, { useEffect } from "react";
+import {
+  Alert,
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+const Home = () => {
+  const navigation = useNavigation();
+  const tabBarHeight = useBottomTabBarHeight();
+  const session = true;
+  const tabs: HeaderTabsProps["tabs"] = [
+    {
+      title: "Luciano List",
+      onPress: () => Alert.alert("Tab 1 pressed"),
+      active: true,
+    },
+    {
+      title: "Prime",
+      onPress: () => Alert.alert("Tab 2 pressed"),
+      active: false,
+    },
+    {
+      title: "Video",
+      onPress: () => Alert.alert("Tab 3 pressed"),
+      active: false,
+    },
+  ];
 
-export default function HomeScreen() {
+  useEffect(() => {
+    navigation.setOptions({
+      headerSearchShown: true,
+      headerTabsProps: { tabs },
+    });
+  });
+
+  const onProductPress = ({ id }: Product) => {
+    router.push(`/product/${id}` as any);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <ScrollView
+      scrollEnabled={true}
+      showsVerticalScrollIndicator={true}
+      contentContainerStyle={{
+        paddingBottom: tabBarHeight,
+      }}
+    >
+      <DeliveryLocation />
+      <HomeCarousel />
+      <HomeSuggestions />
+
+      <View
+        style={{
+          marginTop: "55%",
+          backgroundColor: "white",
+          width: "100%",
+          padding: 20,
+        }}
+      >
+        <Text style={{ fontFamily: AmazonEmberBold, fontSize: 18 }}>
+          {session
+            ? "Deals for you"
+            : "Sign in to see personalized recommendations"}
+        </Text>
+
+        <FlatList
+          data={deals}
+          numColumns={3}
+          scrollEnabled={false}
+          contentContainerStyle={{
+            marginTop: 10,
+            width: "100%",
+          }}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                marginBottom: 10,
+                padding: 8,
+              }}
+            >
+              <Pressable onPress={() => onProductPress(item)}>
+                <Text>{item.name}</Text>
+                <Text>${item.currentPrice.toFixed(2)}</Text>
+                <Image
+                  source={{ uri: item.imageUrl }}
+                  style={{ width: 80, height: 80 }}
+                />
+              </Pressable>
+            </View>
+          )}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </View>
+    </ScrollView>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+export default Home;

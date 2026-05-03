@@ -1,24 +1,39 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { useFonts } from "expo-font";
+import { SplashScreen, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+SplashScreen.preventAutoHideAsync();
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+const RootLayout = () => {
+  const [loaded, error] = useFonts({
+    "Amazon-Ember": require("../assets/fonts/Amazon-Ember.ttf"),
+    "Amazon-Ember-Light": require("../assets/fonts/Amazon-Ember-Light.ttf"),
+    "Amazon-Ember-Bold": require("../assets/fonts/Amazon-Ember-Bold.ttf"),
+  });
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  useEffect(() => {
+    if (loaded || error) {
+      setTimeout(() => {
+        SplashScreen.hideAsync();
+      }, 1000);
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style="auto" />
-    </ThemeProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" />
+      </Stack>
+    </GestureHandlerRootView>
   );
-}
+};
+
+export default RootLayout;
