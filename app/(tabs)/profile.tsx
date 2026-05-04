@@ -1,47 +1,129 @@
 import CustomBottomSheet from "@/components/shared/CustomBottomSheet";
-import CustomBottomSheetModal from "@/components/shared/CustomBottomSheetModal";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import React, { useCallback, useRef, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import DefaultButton from "@/components/shared/DefaultButton";
+import { AmazonEmber } from "@/utils/constants/constants";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { router, useNavigation } from "expo-router";
+import React, { useEffect, useRef } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 const Profile = () => {
-  // ref
-  const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const navigation = useNavigation();
+  const userLogged = true;
+  const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const [open, setOpen] = useState<boolean>(false);
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
+  useEffect(() => {
+    navigation.setOptions({
+      headerSearchShown: Boolean(userLogged),
+      headerLeft: userLogged
+        ? () => (
+            <Image
+              source={require("@/assets/images/amazon-images/amazon-logo.png")}
+              style={{ width: 100, height: 30 }}
+            />
+          )
+        : null,
+    });
   }, []);
 
-  const bottomSheetRef2 = useRef<BottomSheetModal>(null);
+  const onPressOrdered = () => {
+    router.push("/(buyer_zone)/myOrder");
+  };
+
+  const onPressSellerZone = () => {
+    router.push("/(seller_zone)/sellerPage" as any);
+  };
+
+  const onPressSignIn = () => {
+    router.push("/(auth)/signIn");
+  };
+
+  const onPressCreateAccount = () => {
+    router.push("/(auth)/signUp");
+  };
+
+  const onPressAccount = () => {
+    bottomSheetRef.current?.expand();
+  };
 
   return (
     <>
-      <View style={styles.container}>
-        <Text>Profile</Text>
-        <Button
-          title="Open Bottom Sheet"
-          onPress={() => bottomSheetRef.current?.present()}
-        />
-        <Button
-          title="Open Bottom Sheet"
-          onPress={() => bottomSheetRef2.current?.expand()}
-        />
-        <CustomBottomSheet
-          title={"Awesome"}
-          panDownClose={false}
-          ref={bottomSheetRef2}
-          content={<Text>Awesome s</Text>}
-        ></CustomBottomSheet>
-      </View>
+      {userLogged ? (
+        <View style={styles.container}>
+          <Pressable
+            style={{ flexDirection: "row", justifyContent: "center", gap: 5 }}
+            onPress={onPressAccount}
+          >
+            <Text style={{ fontFamily: AmazonEmber }}>
+              Hello, luciano.lasala12@hotmail.com
+            </Text>
+            <Ionicons
+              name="chevron-down"
+              size={18}
+              color="black"
+              style={{ top: 1 }}
+            />
+          </Pressable>
+          <View
+            style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
+          >
+            <DefaultButton
+              variant="secondary"
+              onPress={onPressOrdered}
+              styleText={{ fontSize: 16 }}
+              style={{ width: 150 }}
+            >
+              Ordered
+            </DefaultButton>
+            <DefaultButton
+              variant="secondary"
+              onPress={onPressSellerZone}
+              styleText={{ fontSize: 16 }}
+              style={{ width: 150 }}
+            >
+              Seller Zone
+            </DefaultButton>
+          </View>
+        </View>
+      ) : (
+        <View style={styles.noLogged}>
+          <Text style={styles.signInText}>
+            Sign in for the best experience!
+          </Text>
+          <DefaultButton
+            variant="primary"
+            onPress={onPressSignIn}
+            style={{ width: "100%" }}
+          >
+            Sing In
+          </DefaultButton>
+          <DefaultButton
+            variant="secondary"
+            onPress={onPressCreateAccount}
+            style={{ width: "100%" }}
+          >
+            Create account
+          </DefaultButton>
+        </View>
+      )}
 
-      <CustomBottomSheetModal
-        title={"Awesome"}
-        panDownClose={true}
+      <CustomBottomSheet
         ref={bottomSheetRef}
-        content={<Text>Awesome 🎉</Text>}
-      ></CustomBottomSheetModal>
+        title={"My account"}
+        panDownClose={false}
+        content={
+          <>
+            <Text style={{ fontFamily: AmazonEmber }}>Account</Text>
+            <DefaultButton
+              variant="primary"
+              onPress={() => {}}
+              style={{ width: "100%" }}
+            >
+              Sing out
+            </DefaultButton>
+          </>
+        }
+      />
     </>
   );
 };
@@ -50,11 +132,19 @@ export default Profile;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    padding: 16,
+    backgroundColor: "white",
+    gap: 20,
   },
-  contentContainer: {
+  noLogged: {
     flex: 1,
-    padding: 36,
     alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    gap: 10,
+  },
+  signInText: {
+    fontFamily: AmazonEmber,
+    fontSize: 18,
   },
 });

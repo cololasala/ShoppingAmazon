@@ -29,9 +29,10 @@ const CustomBottomSheetModal = forwardRef<Ref, CustomBottomSheetModalProps>(
     return (
       <BottomSheetModal
         ref={ref}
-        index={-1}
+        index={0}
         snapPoints={snapPoints}
         animateOnMount={true}
+        handleIndicatorStyle={props.panDownClose ? {} : { display: "none" }}
         enablePanDownToClose={props.panDownClose}
         enableDynamicSizing={false}
         backdropComponent={(props) => (

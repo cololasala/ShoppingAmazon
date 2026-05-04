@@ -29,6 +29,7 @@ const CustomBottomSheet = forwardRef<Ref, CustomBottomSheetProps>(
         index={-1}
         snapPoints={snapPoints}
         animateOnMount={true}
+        handleIndicatorStyle={props.panDownClose ? {} : { display: "none" }}
         enablePanDownToClose={props.panDownClose}
         enableDynamicSizing={false}
       >
