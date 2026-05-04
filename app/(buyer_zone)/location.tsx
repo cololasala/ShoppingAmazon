@@ -1,5 +1,6 @@
+import { AmazonEmber } from "@/utils/constants/constants";
 import React, { useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
 const Location = () => {
   const [location, setLocation] = useState<string>("");
@@ -14,36 +15,20 @@ const Location = () => {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20, gap: 15 }}>
+    <View style={styles.mainContainer}>
       <View>
-        <Text style={{ fontSize: 16, fontFamily: "AmazonEmberBold" }}>
-          Name
-        </Text>
+        <Text style={styles.textLabel}>Name</Text>
         <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: "gray",
-            borderRadius: 4,
-            padding: 10,
-            marginTop: 5,
-          }}
+          style={styles.inputStyle}
           value={location}
           placeholder="Name"
           onChangeText={handleLocationChange}
         />
       </View>
       <View>
-        <Text style={{ fontSize: 16, fontFamily: "AmazonEmberBold" }}>
-          Give delivery address
-        </Text>
+        <Text style={styles.textLabel}>Give delivery address</Text>
         <TextInput
-          style={{
-            borderWidth: 1,
-            borderColor: "gray",
-            borderRadius: 4,
-            padding: 10,
-            marginTop: 5,
-          }}
+          style={styles.inputStyle}
           value={deliveryAddress}
           placeholder="Enter delivery address"
           onChangeText={handleDeliveryAddressChange}
@@ -54,3 +39,18 @@ const Location = () => {
 };
 
 export default Location;
+
+const styles = StyleSheet.create({
+  mainContainer: { flex: 1, padding: 20, gap: 15 },
+  textLabel: {
+    fontFamily: AmazonEmber,
+    fontSize: 16,
+  },
+  inputStyle: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 4,
+    padding: 10,
+    marginTop: 5,
+  },
+});

@@ -1,3 +1,4 @@
+import DefaultButton from "@/components/shared/DefaultButton";
 import DeliveryLocation from "@/components/shared/DeliveryLocation";
 import { HeaderTabsProps } from "@/components/shared/header/HeaderTabs";
 import HomeCarousel from "@/components/shared/Screen/HomeCarousel";
@@ -15,6 +16,7 @@ import {
   Image,
   Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -22,7 +24,7 @@ import {
 const Home = () => {
   const navigation = useNavigation();
   const tabBarHeight = useBottomTabBarHeight();
-  const session = true;
+  const userLogged = false;
   const tabs: HeaderTabsProps["tabs"] = [
     {
       title: "Luciano List",
@@ -52,6 +54,10 @@ const Home = () => {
     router.push(`/product/${id}` as any);
   };
 
+  const onPressSignIn = () => {
+    router.push("/(auth)/signIn");
+  };
+
   return (
     <ScrollView
       scrollEnabled={true}
@@ -64,50 +70,66 @@ const Home = () => {
       <HomeCarousel />
       <HomeSuggestions />
 
-      <View
-        style={{
-          marginTop: "55%",
-          backgroundColor: "white",
-          width: "100%",
-          padding: 20,
-        }}
-      >
-        <Text style={{ fontFamily: AmazonEmberBold, fontSize: 18 }}>
-          {session
-            ? "Deals for you"
-            : "Sign in to see personalized recommendations"}
-        </Text>
-
-        <FlatList
-          data={deals}
-          numColumns={3}
-          scrollEnabled={false}
-          contentContainerStyle={{
-            marginTop: 10,
-            width: "100%",
-          }}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <View
-              style={{
-                marginBottom: 10,
-                padding: 8,
+      <View style={styles.container}>
+        {userLogged ? (
+          <>
+            <Text style={styles.containerText}>Deals for you</Text>
+            <FlatList
+              data={deals}
+              numColumns={3}
+              scrollEnabled={false}
+              contentContainerStyle={{
+                marginTop: 10,
+                width: "100%",
               }}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <View
+                  style={{
+                    marginBottom: 10,
+                    padding: 8,
+                  }}
+                >
+                  <Pressable onPress={() => onProductPress(item)}>
+                    <Text>{item.name}</Text>
+                    <Text>${item.currentPrice.toFixed(2)}</Text>
+                    <Image
+                      source={{ uri: item.imageUrl! }}
+                      style={{ width: 80, height: 80 }}
+                    />
+                  </Pressable>
+                </View>
+              )}
+            />
+          </>
+        ) : (
+          <>
+            <Text
+              style={[
+                styles.containerText,
+                { textAlign: "center", paddingBottom: 12 },
+              ]}
             >
-              <Pressable onPress={() => onProductPress(item)}>
-                <Text>{item.name}</Text>
-                <Text>${item.currentPrice.toFixed(2)}</Text>
-                <Image
-                  source={{ uri: item.imageUrl }}
-                  style={{ width: 80, height: 80 }}
-                />
-              </Pressable>
-            </View>
-          )}
-        />
+              Sign in to see personalized recommendations
+            </Text>
+            <DefaultButton variant="primary" onPress={onPressSignIn}>
+              Sign In
+            </DefaultButton>
+          </>
+        )}
       </View>
     </ScrollView>
   );
 };
 
 export default Home;
+
+const styles = StyleSheet.create({
+  container: {
+    marginTop: "55%",
+    backgroundColor: "white",
+    width: "100%",
+    padding: 20,
+  },
+  containerText: { fontFamily: AmazonEmberBold, fontSize: 18 },
+});

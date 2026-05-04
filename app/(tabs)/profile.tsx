@@ -9,7 +9,7 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 const Profile = () => {
   const navigation = useNavigation();
-  const userLogged = true;
+  const userLogged = false;
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   useEffect(() => {
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "white",
     paddingHorizontal: 20,
     gap: 10,
   },
