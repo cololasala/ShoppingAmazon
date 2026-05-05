@@ -1,7 +1,8 @@
 import DefaultButton from "@/components/shared/DefaultButton";
+import { supabase } from "@/lib/supabase";
 import { AmazonEmber, AmazonEmberLight } from "@/utils/constants/constants";
 import { Ionicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -13,29 +14,37 @@ import {
   View,
 } from "react-native";
 
-enum Steps {
+enum Step {
   EMAIL = 1,
   PASSWORD = 2,
 }
 
 const SignIn = () => {
-  const [selectedStep, setSelectedStep] = useState(Steps.EMAIL);
+  const [selectedStep, setSelectedStep] = useState(Step.EMAIL);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const onPressContinue = () => {
-    //TODO: Make show password if email is registered, if not then go to SignUp
 
-    if (email === "pepe") {
-      setSelectedStep(Steps.PASSWORD);
+  const login = async () => {
+    try {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.signInWithPassword({ email, password });
+      console.log(session);
+      // dispatch(setSession(session));
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.log(error);
     }
   };
+
   return (
     <>
       <View style={styles.mainContainer}>
         <Text style={styles.textTitle}>SignIn</Text>
         <View style={{ gap: 10 }}>
-          {selectedStep === Steps.EMAIL ? (
+          {selectedStep === Step.EMAIL ? (
             <>
               <Text style={styles.textLabel}>Email</Text>
               <TextInput
@@ -48,7 +57,7 @@ const SignIn = () => {
           ) : (
             <>
               <View>
-                <Pressable onPress={() => setSelectedStep(Steps.EMAIL)}>
+                <Pressable onPress={() => setSelectedStep(Step.EMAIL)}>
                   <Text
                     style={{
                       fontFamily: AmazonEmber,
@@ -86,10 +95,14 @@ const SignIn = () => {
         </View>
         <DefaultButton
           variant="primary"
-          onPress={onPressContinue}
+          onPress={() => {
+            if (selectedStep === Step.EMAIL) setSelectedStep(Step.PASSWORD);
+            else login();
+          }}
+          disabled={email.length < 5}
           style={{ marginTop: 10 }}
         >
-          {Steps.EMAIL === selectedStep ? "Continue" : "Sign In"}
+          {Step.EMAIL === selectedStep ? "Continue" : "Sign In"}
         </DefaultButton>
         <Text style={{ textAlign: "center" }}>
           Don&apos;t have an account?{" "}

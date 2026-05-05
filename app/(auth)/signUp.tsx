@@ -1,7 +1,9 @@
 import DefaultButton from "@/components/shared/DefaultButton";
+import OtpNumInput from "@/components/shared/Screen/OtpNumInput";
+import { supabase } from "@/lib/supabase";
 import { AmazonEmber, AmazonEmberLight } from "@/utils/constants/constants";
 import { Ionicons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -13,25 +15,66 @@ import {
   View,
 } from "react-native";
 
-enum Steps {
-  EMAIL = 1,
-  PASSWORD = 2,
+enum Step {
+  "EMAIL" = 1,
+  "OTP" = 2,
+  "PASSWORD" = 3,
 }
 
 const SignUp = () => {
-  const [selectedStep, setSelectedStep] = useState(Steps.EMAIL);
+  const [selectedStep, setSelectedStep] = useState(Step.EMAIL);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const onPressContinue = () => {
-    //TODO: Make register
+
+  const sendOtp = async () => {
+    const { data, error } = await supabase.auth.signInWithOtp({
+      email,
+    });
+    if (error) {
+      console.log(error);
+      console.log("not valid email");
+    }
+  };
+
+  const register = async () => {
+    try {
+      if (!otp) return;
+      const { data: verifyData, error: verifyError } =
+        await supabase.auth.verifyOtp({
+          email,
+          token: otp,
+          type: "email",
+        });
+      if (verifyError) {
+        console.error("OTP verification faild:", verifyError.message);
+      }
+      const { data: updateData, error: updateError } =
+        await supabase.auth.updateUser({
+          password,
+        });
+      if (updateError) {
+        console.error("Password update failed:", updateError.message);
+        return;
+      }
+      router.replace("/(tabs)");
+    } catch (err) {
+      console.error("Registration failed:", err);
+    }
   };
   return (
     <>
       <View style={styles.mainContainer}>
-        <Text style={styles.textTitle}>Create an Account</Text>
+        <Text style={styles.textTitle}>
+          {selectedStep === Step.EMAIL
+            ? "Create an account"
+            : selectedStep === Step.OTP
+              ? "Set your otp"
+              : "Set your password"}
+        </Text>
         <View style={{ gap: 10 }}>
-          {selectedStep === Steps.EMAIL ? (
+          {selectedStep === Step.EMAIL ? (
             <>
               <Text style={styles.textLabel}>Email</Text>
               <TextInput
@@ -41,10 +84,25 @@ const SignUp = () => {
                 placeholder="Enter email"
               />
             </>
+          ) : selectedStep === Step.OTP ? (
+            <>
+              <OtpNumInput onTextChange={setOtp} />
+              {!otp && (
+                <Text
+                  style={{
+                    alignSelf: "center",
+                    fontSize: 14,
+                    fontFamily: AmazonEmberLight,
+                  }}
+                >
+                  Please fill the OTP
+                </Text>
+              )}
+            </>
           ) : (
             <>
               <View>
-                <Pressable onPress={() => setSelectedStep(Steps.EMAIL)}>
+                <Pressable onPress={() => setSelectedStep(Step.EMAIL)}>
                   <Text
                     style={{
                       fontFamily: AmazonEmber,
@@ -82,10 +140,22 @@ const SignUp = () => {
         </View>
         <DefaultButton
           variant="primary"
-          onPress={onPressContinue}
+          onPress={() => {
+            if (selectedStep === Step.EMAIL) {
+              sendOtp();
+              setSelectedStep(Step.OTP);
+            } else if (selectedStep === Step.OTP) {
+              setSelectedStep(Step.PASSWORD);
+            } else if (selectedStep === Step.PASSWORD) {
+              register();
+            }
+          }}
+          disabled={email.length < 5}
           style={{ marginTop: 10 }}
         >
-          {Steps.EMAIL === selectedStep ? "Continue" : "Sign In"}
+          {selectedStep === Step.EMAIL || selectedStep === Step.OTP
+            ? "Continue"
+            : "Sign up"}
         </DefaultButton>
         <Text style={{ textAlign: "center" }}>
           Already have an account?{" "}
