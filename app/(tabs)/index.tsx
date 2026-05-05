@@ -4,6 +4,7 @@ import { HeaderTabsProps } from "@/components/shared/header/HeaderTabs";
 import HomeCarousel from "@/components/shared/Screen/HomeCarousel";
 import HomeSuggestions from "@/components/shared/Screen/HomeSuggestions";
 import { deals } from "@/dummy_data/product_deal";
+import { RootState } from "@/store/store";
 import { Product } from "@/types/product";
 import { AmazonEmberBold } from "@/utils/constants/constants";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -20,14 +21,15 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const navigation = useNavigation();
   const tabBarHeight = useBottomTabBarHeight();
-  const userLogged = false;
+  const userLogged = useSelector((state: RootState) => state.Auth.session);
   const tabs: HeaderTabsProps["tabs"] = [
     {
-      title: "Luciano List",
+      title: "List",
       onPress: () => Alert.alert("Tab 1 pressed"),
       active: true,
     },

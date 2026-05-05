@@ -1,4 +1,5 @@
 import DefaultButton from "@/components/shared/DefaultButton";
+import { RootState } from "@/store/store";
 import { AmazonEmber } from "@/utils/constants/constants";
 import {
   AntDesign,
@@ -19,9 +20,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSelector } from "react-redux";
 
 const CreateProduct = () => {
-  const userLogged = false;
+  const userLogged = useSelector((state: RootState) => state.Auth.session);
   const [name, setName] = useState<string>("");
   const [amountInStock, setAmountInStock] = useState<string>("");
   const [currentPrice, setCurrentPrice] = useState<string>("");

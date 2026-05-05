@@ -33,8 +33,7 @@ const SignUp = () => {
       email,
     });
     if (error) {
-      console.log(error);
-      console.log("not valid email");
+      console.warn(error);
     }
   };
 

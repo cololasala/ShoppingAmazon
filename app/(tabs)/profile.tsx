@@ -1,16 +1,32 @@
 import CustomBottomSheet from "@/components/shared/CustomBottomSheet";
 import DefaultButton from "@/components/shared/DefaultButton";
+import { supabase } from "@/lib/supabase";
+import { setSession } from "@/store/slices/authSlice";
+import { RootState } from "@/store/store";
 import { AmazonEmber } from "@/utils/constants/constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router, useNavigation } from "expo-router";
-import React, { useEffect, useRef } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
   const navigation = useNavigation();
-  const userLogged = false;
+  const dispatch = useDispatch();
+  const userLogged = useSelector((state: RootState) => state.Auth.session);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const userEmail = useSelector((state: RootState) => state.Auth.session)?.user
+    .email;
+  const [isSeller, setIsSeller] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -46,6 +62,45 @@ const Profile = () => {
     bottomSheetRef.current?.expand();
   };
 
+  const onPressSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      dispatch(setSession(null));
+      bottomSheetRef.current?.close();
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
+  const sellerUser = async () => {
+    try {
+      setLoading(true);
+      let { data, error } = await supabase
+        .from("profiles")
+        .select("is_seller")
+        .eq("id", userLogged?.user.id);
+      if (data && data.length > 0) setIsSeller(data[0].is_seller);
+    } catch (error) {
+      console.warn(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    sellerUser();
+  }, []);
+
+  if (loading) {
+    return (
+      <ActivityIndicator
+        color="#f8ab05ff"
+        size={34}
+        style={{ marginTop: 20 }}
+      ></ActivityIndicator>
+    );
+  }
+
   return (
     <>
       {userLogged ? (
@@ -54,9 +109,7 @@ const Profile = () => {
             style={{ flexDirection: "row", justifyContent: "center", gap: 5 }}
             onPress={onPressAccount}
           >
-            <Text style={{ fontFamily: AmazonEmber }}>
-              Hello, luciano.lasala12@hotmail.com
-            </Text>
+            <Text style={{ fontFamily: AmazonEmber }}>Hello, {userEmail}</Text>
             <Ionicons
               name="chevron-down"
               size={18}
@@ -71,18 +124,20 @@ const Profile = () => {
               variant="secondary"
               onPress={onPressOrdered}
               styleText={{ fontSize: 16 }}
-              style={{ width: 150 }}
+              style={{ width: isSeller ? 150 : "100%" }}
             >
               Ordered
             </DefaultButton>
-            <DefaultButton
-              variant="secondary"
-              onPress={onPressSellerZone}
-              styleText={{ fontSize: 16 }}
-              style={{ width: 150 }}
-            >
-              Seller Zone
-            </DefaultButton>
+            {isSeller && (
+              <DefaultButton
+                variant="secondary"
+                onPress={onPressSellerZone}
+                styleText={{ fontSize: 16 }}
+                style={{ width: 150 }}
+              >
+                Seller Zone
+              </DefaultButton>
+            )}
           </View>
         </View>
       ) : (
@@ -116,10 +171,10 @@ const Profile = () => {
             <Text style={{ fontFamily: AmazonEmber }}>Account</Text>
             <DefaultButton
               variant="primary"
-              onPress={() => {}}
+              onPress={onPressSignOut}
               style={{ width: "100%" }}
             >
-              Sing out
+              Sign out
             </DefaultButton>
           </>
         }

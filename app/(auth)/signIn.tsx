@@ -1,5 +1,6 @@
 import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
+import { setSession } from "@/store/slices/authSlice";
 import { AmazonEmber, AmazonEmberLight } from "@/utils/constants/constants";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
@@ -13,6 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
 enum Step {
   EMAIL = 1,
@@ -20,6 +22,7 @@ enum Step {
 }
 
 const SignIn = () => {
+  const dispatch = useDispatch();
   const [selectedStep, setSelectedStep] = useState(Step.EMAIL);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
@@ -31,8 +34,7 @@ const SignIn = () => {
         data: { session },
         error,
       } = await supabase.auth.signInWithPassword({ email, password });
-      console.log(session);
-      // dispatch(setSession(session));
+      dispatch(setSession(session));
       router.replace("/(tabs)");
     } catch (error) {
       console.log(error);
