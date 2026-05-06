@@ -1,7 +1,9 @@
 import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
+import { showToastError } from "@/services/toastService";
 import { setSession } from "@/store/slices/authSlice";
 import { AmazonEmber, AmazonEmberLight } from "@/utils/constants/constants";
+import { isValidEmail } from "@/utils/emailValidator";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
@@ -34,10 +36,15 @@ const SignIn = () => {
         data: { session },
         error,
       } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        showToastError("Error", "Invalid credentials");
+        return;
+      }
       dispatch(setSession(session));
       router.replace("/(tabs)");
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   };
 
@@ -54,6 +61,7 @@ const SignIn = () => {
                 onChangeText={setEmail}
                 style={styles.inputStyle}
                 placeholder="Enter email"
+                keyboardType="email-address"
               />
             </>
           ) : (
@@ -101,7 +109,7 @@ const SignIn = () => {
             if (selectedStep === Step.EMAIL) setSelectedStep(Step.PASSWORD);
             else login();
           }}
-          disabled={email.length < 5}
+          disabled={!isValidEmail(email)}
           style={{ marginTop: 10 }}
         >
           {Step.EMAIL === selectedStep ? "Continue" : "Sign In"}

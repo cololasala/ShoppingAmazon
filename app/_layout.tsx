@@ -1,3 +1,4 @@
+import { toastConfig } from "@/config/toastConfig";
 import { store } from "@/store/store";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
@@ -5,6 +6,7 @@ import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 
 SplashScreen.preventAutoHideAsync();
@@ -38,6 +40,7 @@ const RootLayout = () => {
             <Stack.Screen name="(tabs)" />
           </Stack>
         </BottomSheetModalProvider>
+        <Toast config={toastConfig} />
       </Provider>
     </GestureHandlerRootView>
   );

@@ -1,7 +1,9 @@
 import DefaultButton from "@/components/shared/DefaultButton";
 import OtpNumInput from "@/components/shared/Screen/OtpNumInput";
 import { supabase } from "@/lib/supabase";
+import { showToastSuccess } from "@/services/toastService";
 import { AmazonEmber, AmazonEmberLight } from "@/utils/constants/constants";
+import { isValidEmail } from "@/utils/emailValidator";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
@@ -57,6 +59,7 @@ const SignUp = () => {
         console.error("Password update failed:", updateError.message);
         return;
       }
+      showToastSuccess("Success", "You have successfully registered!");
       router.replace("/(tabs)");
     } catch (err) {
       console.error("Registration failed:", err);
@@ -81,6 +84,7 @@ const SignUp = () => {
                 onChangeText={setEmail}
                 style={styles.inputStyle}
                 placeholder="Enter email"
+                keyboardType="email-address"
               />
             </>
           ) : selectedStep === Step.OTP ? (
@@ -149,7 +153,7 @@ const SignUp = () => {
               register();
             }
           }}
-          disabled={email.length < 5}
+          disabled={!isValidEmail(email)}
           style={{ marginTop: 10 }}
         >
           {selectedStep === Step.EMAIL || selectedStep === Step.OTP
