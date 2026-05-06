@@ -37,7 +37,14 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "This app needs access to your photos so you can choose a product image."
+        }
+      ],
+      ["expo-document-picker", { "iCloudContainerEnvironment": "Production" }]
     ],
     "experiments": {
       "typedRoutes": true,

@@ -15,12 +15,24 @@ import {
   Image,
   Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useSelector } from "react-redux";
+
+interface UploadDocument {
+  uri: string;
+  name: string;
+}
+
+interface UploadImage {
+  uri: string;
+  name: string;
+  type: string;
+}
 
 const CreateProduct = () => {
   const userLogged = useSelector((state: RootState) => state.Auth.session);
@@ -31,185 +43,118 @@ const CreateProduct = () => {
   const [deliveryPrice, setDeliveryPrice] = useState<string>("");
   const [deliveryInDays, setDeliveryInDays] = useState<string>("");
   const [isAmazonChoice, setIsAmazonChoice] = useState<boolean>(false);
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<UploadImage | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [documentFile, setDocumentFile] = useState<UploadDocument | null>(null);
 
-  const [fileUrlGLB, setFileUrlGLB] = useState<string | null>(null);
   const pickMedia = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      alert("permission to access media library is required!");
+      alert("Permission to access media library is required!");
     }
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
+      selectionLimit: 1,
     });
     if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
+      console.log(result.assets[0]);
+      const { uri, fileName, mimeType } = result.assets[0];
+      setImageFile({
+        uri,
+        name: fileName!,
+        type: mimeType!,
+      });
     }
   };
+
   const pickAndUploadGLB = async () => {
     const result = await DocumentPicker.getDocumentAsync({
       type: "*/*",
       copyToCacheDirectory: true,
     });
     if (!result.canceled) {
-      setFileUrlGLB(result.assets[0].uri || null);
+      setDocumentFile({
+        name: result.assets[0].name,
+        uri: result.assets[0].uri,
+      });
     }
   };
 
-  const createProduct = () => {
+  const createProduct = async () => {
     //TODO:
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        padding: 20,
-        gap: 20,
-        backgroundColor: "white",
-      }}
-    >
-      <View style={{ width: "100%", gap: 15, paddingBottom: 20 }}>
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            fontSize: 16,
-            fontFamily: AmazonEmber,
-          }}
-        >
-          Enter Product Name
-        </Text>
-        <TextInput
-          value={name}
-          onChangeText={setName}
-          style={{
-            borderWidth: 1,
-            borderRadius: 4,
-            borderColor: "black",
-            padding: 10,
-            fontFamily: AmazonEmber,
-          }}
-          placeholder="Product name"
-          autoCapitalize="none"
-        />
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            fontSize: 16,
-            fontFamily: AmazonEmber,
-          }}
-        >
-          Amount in Stock
-        </Text>
-        <TextInput
-          value={amountInStock}
-          onChangeText={setAmountInStock}
-          keyboardType="numeric"
-          style={{
-            borderWidth: 1,
-            borderRadius: 4,
-            borderColor: "black",
-            padding: 10,
-            fontFamily: AmazonEmber,
-          }}
-          placeholder="Amount in stock"
-          autoCapitalize="none"
-        />
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            fontSize: 16,
-            fontFamily: AmazonEmber,
-          }}
-        >
-          Current Price
-        </Text>
-        <TextInput
-          value={currentPrice}
-          onChangeText={setCurrentPrice}
-          keyboardType="numeric"
-          style={{
-            borderWidth: 1,
-            borderRadius: 4,
-            borderColor: "black",
-            padding: 10,
-            fontFamily: AmazonEmber,
-          }}
-          placeholder="Current Price"
-          autoCapitalize="none"
-        />
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            fontSize: 16,
-            fontFamily: AmazonEmber,
-          }}
-        >
-          Previous Price
-        </Text>
-        <TextInput
-          value={previousPrice}
-          onChangeText={setPreviousPrice}
-          keyboardType="numeric"
-          style={{
-            borderWidth: 1,
-            borderRadius: 4,
-            borderColor: "black",
-            padding: 10,
-            fontFamily: AmazonEmber,
-          }}
-          placeholder="Previous Price"
-          autoCapitalize="none"
-        />
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            fontSize: 16,
-            fontFamily: AmazonEmber,
-          }}
-        >
-          Delivery Price
-        </Text>
-        <TextInput
-          value={deliveryPrice}
-          onChangeText={setDeliveryPrice}
-          keyboardType="numeric"
-          style={{
-            borderWidth: 1,
-            borderRadius: 4,
-            borderColor: "black",
-            padding: 10,
-            fontFamily: AmazonEmber,
-          }}
-          placeholder="Delivery Price"
-          autoCapitalize="none"
-        />
-        <Text
-          style={{
-            alignSelf: "flex-start",
-            fontSize: 16,
-            fontFamily: AmazonEmber,
-          }}
-        >
-          Delivery In Days
-        </Text>
-        <TextInput
-          value={deliveryInDays}
-          onChangeText={setDeliveryInDays}
-          keyboardType="numeric"
-          style={{
-            borderWidth: 1,
-            borderRadius: 4,
-            borderColor: "black",
-            padding: 10,
-            fontFamily: AmazonEmber,
-          }}
-          placeholder="Delivery in Days"
-          autoCapitalize="none"
-        />
+    <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+      <View style={styles.contentContainer}>
+        <View>
+          <Text style={styles.label}>Enter Product Name</Text>
+          <TextInput
+            value={name}
+            onChangeText={setName}
+            style={styles.inputStyle}
+            placeholder="Product name"
+            autoCapitalize="none"
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>Amount in Stock</Text>
+          <TextInput
+            value={amountInStock}
+            onChangeText={setAmountInStock}
+            keyboardType="numeric"
+            style={styles.inputStyle}
+            placeholder="Amount in stock"
+            autoCapitalize="none"
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>Current Price</Text>
+          <TextInput
+            value={currentPrice}
+            onChangeText={setCurrentPrice}
+            keyboardType="numeric"
+            style={styles.inputStyle}
+            placeholder="Current Price"
+            autoCapitalize="none"
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>Previous Price</Text>
+          <TextInput
+            value={previousPrice}
+            onChangeText={setPreviousPrice}
+            keyboardType="numeric"
+            style={styles.inputStyle}
+            placeholder="Previous Price"
+            autoCapitalize="none"
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>Delivery Price</Text>
+          <TextInput
+            value={deliveryPrice}
+            onChangeText={setDeliveryPrice}
+            keyboardType="numeric"
+            style={styles.inputStyle}
+            placeholder="Delivery Price"
+            autoCapitalize="none"
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>Delivery In Days</Text>
+          <TextInput
+            value={deliveryInDays}
+            onChangeText={setDeliveryInDays}
+            keyboardType="numeric"
+            style={styles.inputStyle}
+            placeholder="Delivery in Days"
+            autoCapitalize="none"
+          />
+        </View>
         <View
           style={{
             flexDirection: "row",
@@ -220,7 +165,7 @@ const CreateProduct = () => {
           <Checkbox
             value={isAmazonChoice}
             onValueChange={setIsAmazonChoice}
-            style={{ margin: 8 }}
+            style={{ margin: 4 }}
             color={isAmazonChoice ? "#f1b023ff" : undefined}
           />
           <Text
@@ -233,10 +178,10 @@ const CreateProduct = () => {
             Amazon Choice
           </Text>
         </View>
-        {imageUri && (
+        {imageFile && (
           <View>
             <Image
-              source={{ uri: imageUri }}
+              source={{ uri: imageFile.uri }}
               style={{
                 width: 150,
                 aspectRatio: 5 / 3,
@@ -246,7 +191,7 @@ const CreateProduct = () => {
               }}
             />
             <Pressable
-              onPress={() => setImageUri("")}
+              onPress={() => setImageFile(null)}
               style={{
                 position: "absolute",
                 top: 3,
@@ -262,62 +207,40 @@ const CreateProduct = () => {
           </View>
         )}
         <TouchableOpacity onPress={pickMedia}>
-          {!imageUri && (
-            <View
-              style={{
-                borderWidth: 1,
-                borderRadius: 4,
-                borderColor: "black",
-                padding: 10,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: AmazonEmber,
-                  color: "#b6b6b6ff",
-                }}
-              >
-                Add Product Image
-              </Text>
+          {!imageFile && (
+            <View style={styles.pickContainer}>
+              <Text style={styles.pickText}>Add Product Image</Text>
               <Feather name="folder-plus" size={20} color="black" />
             </View>
           )}
         </TouchableOpacity>
 
-        {fileUrlGLB ? (
+        {documentFile ? (
           <View>
-            <Pressable onPress={() => setFileUrlGLB(null)}>
+            <Pressable
+              style={{
+                position: "absolute",
+                left: 40,
+                top: -5,
+                zIndex: 10,
+              }}
+              onPress={() => {
+                setDocumentFile(null);
+              }}
+            >
               <MaterialCommunityIcons
                 name="close-circle"
                 size={25}
                 color="#5a5a5aff"
-                style={{ position: "absolute", left: 36, top: -10 }}
               />
             </Pressable>
             <MaterialIcons name="upload-file" size={50} color="#393939ff" />
+            <Text style={styles.documentFileText}>{documentFile.name}</Text>
           </View>
         ) : (
           <TouchableOpacity onPress={pickAndUploadGLB}>
-            <View
-              style={{
-                borderWidth: 1,
-                borderRadius: 4,
-                borderColor: "black",
-                padding: 10,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: AmazonEmber,
-                  color: "#b6b6b6ff",
-                }}
-              >
+            <View style={styles.pickContainer}>
+              <Text style={styles.pickText}>
                 Add Product 3D Model .glb file
               </Text>
               <AntDesign name="file-add" size={18} color="black" />
@@ -337,3 +260,45 @@ const CreateProduct = () => {
 };
 
 export default CreateProduct;
+
+const styles = StyleSheet.create({
+  scrollViewContainer: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: "white",
+  },
+  contentContainer: {
+    width: "100%",
+    gap: 15,
+    paddingBottom: 20,
+  },
+  label: {
+    alignSelf: "flex-start",
+    fontSize: 16,
+    fontFamily: AmazonEmber,
+  },
+  inputStyle: {
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: "black",
+    padding: 10,
+    fontFamily: AmazonEmber,
+  },
+  pickContainer: {
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: "black",
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  pickText: {
+    fontSize: 16,
+    fontFamily: AmazonEmber,
+    color: "#b6b6b6ff",
+  },
+  documentFileText: {
+    fontSize: 16,
+    fontFamily: AmazonEmber,
+  },
+});
