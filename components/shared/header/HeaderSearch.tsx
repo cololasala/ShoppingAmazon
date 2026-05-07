@@ -5,17 +5,20 @@ import { useRef, useState } from "react";
 import type { TextInput as TextInputType } from "react-native";
 import { Pressable, TextInput, View } from "react-native";
 
-export default function HeaderSearch() {
+const HeaderSearch = () => {
   const segments = useSegments();
   const ref = useRef<TextInputType>(null);
   const [query, setQuery] = useState("");
+
   const onPressIn = () => {
     if (segments[0] !== "(search)") router.push("/(search)/search" as any);
   };
+
   const onGoBack = () => {
     setQuery("");
     router.dismissAll();
   };
+
   useDebouncedCallback(
     () => {
       if (query) router.setParams({ query });
@@ -26,6 +29,7 @@ export default function HeaderSearch() {
     [query],
     500,
   );
+
   return (
     <View
       style={{
@@ -89,4 +93,6 @@ export default function HeaderSearch() {
       </View>
     </View>
   );
-}
+};
+
+export default HeaderSearch;

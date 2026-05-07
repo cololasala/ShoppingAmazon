@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function GradientBackground() {
+const GradientBackground = () => {
   return (
     <LinearGradient
       style={{
@@ -16,4 +16,6 @@ export default function GradientBackground() {
       end={{ x: 1, y: 0 }}
     />
   );
-}
+};
+
+export default GradientBackground;

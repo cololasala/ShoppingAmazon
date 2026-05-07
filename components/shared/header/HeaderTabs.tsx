@@ -11,7 +11,7 @@ export interface HeaderTabsProps {
     | null;
 }
 
-export function HeaderTabs({ tabs }: HeaderTabsProps) {
+const HeaderTabs = ({ tabs }: HeaderTabsProps) => {
   if (!tabs?.length) return null;
 
   return (
@@ -34,4 +34,6 @@ export function HeaderTabs({ tabs }: HeaderTabsProps) {
       ))}
     </View>
   );
-}
+};
+
+export default HeaderTabs;

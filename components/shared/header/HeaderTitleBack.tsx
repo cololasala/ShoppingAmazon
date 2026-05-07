@@ -6,16 +6,16 @@ interface HeaderTitleBackProps {
   onPress: () => void;
 }
 
-export function HeaderTitle() {
+export const HeaderTitle = () => {
   return (
     <Text style={{ fontSize: 18, fontFamily: AmazonEmberBold }}>Amazon.in</Text>
   );
-}
+};
 
-export function HeaderLeftBack({ onPress }: HeaderTitleBackProps) {
+export const HeaderLeftBack = ({ onPress }: HeaderTitleBackProps) => {
   return (
     <Pressable onPress={onPress}>
       <Icon name="arrow-back" color={"black"} size={24} />
     </Pressable>
   );
-}
+};
