@@ -6,6 +6,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import React, { forwardRef } from "react";
 import { StyleSheet, View } from "react-native";
+
 interface CustomBottomSheetModalProps {
   title: string;
   panDownClose: boolean;

@@ -8,9 +8,10 @@ import { Pressable, TextInput, View } from "react-native";
 const HeaderSearch = () => {
   const segments = useSegments();
   const ref = useRef<TextInputType>(null);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState<string>("");
 
   const onPressIn = () => {
+    //prevent re-navigate when is preessed
     if (segments[0] !== "(search)") router.push("/(search)/search" as any);
   };
 

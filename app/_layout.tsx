@@ -1,3 +1,4 @@
+import { CustomModalProvider } from "@/components/shared/CustomModal/CustomModalProvider";
 import { toastConfig } from "@/config/toastConfig";
 import { store } from "@/store/store";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -34,11 +35,13 @@ const RootLayout = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
         <BottomSheetModalProvider>
-          <StatusBar style="auto" />
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="(tabs)" />
-          </Stack>
+          <CustomModalProvider>
+            <StatusBar style="auto" />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="(tabs)" />
+            </Stack>
+          </CustomModalProvider>
         </BottomSheetModalProvider>
         <Toast config={toastConfig} />
       </Provider>

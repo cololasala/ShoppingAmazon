@@ -1,3 +1,4 @@
+import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator";
 import CustomBottomSheet from "@/components/shared/CustomBottomSheet";
 import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
@@ -8,14 +9,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router, useNavigation } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
@@ -91,15 +85,7 @@ const Profile = () => {
     sellerUser();
   }, []);
 
-  if (loading) {
-    return (
-      <ActivityIndicator
-        color="#f8ab05ff"
-        size={34}
-        style={{ marginTop: 20 }}
-      ></ActivityIndicator>
-    );
-  }
+  if (loading) return <CustomActivityIndicator />;
 
   return (
     <>

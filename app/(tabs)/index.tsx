@@ -1,3 +1,4 @@
+import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator";
 import DefaultButton from "@/components/shared/DefaultButton";
 import DeliveryLocation from "@/components/shared/DeliveryLocation";
 import { HeaderTabsProps } from "@/components/shared/header/HeaderTabs";
@@ -14,7 +15,6 @@ import { router } from "expo-router";
 import { useNavigation } from "expo-router/build/exports";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   FlatList,
   Image,
@@ -83,14 +83,7 @@ const Home = () => {
   };
 
   const dealsContent = () => {
-    if (loading)
-      return (
-        <ActivityIndicator
-          color="#f8ab05ff"
-          size={34}
-          style={{ marginTop: 20 }}
-        ></ActivityIndicator>
-      );
+    if (loading) return <CustomActivityIndicator size={34} />;
 
     if (userLogged) {
       return deals.length > 0 ? (
@@ -113,8 +106,12 @@ const Home = () => {
                 }}
               >
                 <Pressable onPress={() => onProductPress(item)}>
-                  <Text>{item.name}</Text>
-                  <Text>${item.currentPrice.toFixed(2)}</Text>
+                  <Text style={{ fontFamily: AmazonEmber, fontSize: 16 }}>
+                    {item.name}
+                  </Text>
+                  <Text style={{ fontFamily: AmazonEmber, fontSize: 16 }}>
+                    ${item.currentPrice.toFixed(2)}
+                  </Text>
                   <Image
                     source={{ uri: item.imageUrl! }}
                     style={{ width: 80, height: 80 }}
