@@ -9,5 +9,5 @@ export interface Product {
   isAmazonChoice: boolean;
   imageUrl?: string | null;
   model3DUrl?: string | null;
-  user_id: number;
+  user_id: number | string;
 }

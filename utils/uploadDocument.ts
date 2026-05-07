@@ -1,16 +1,19 @@
 import { supabase } from "@/lib/supabase";
 
-export const uploadImage = async (imageUri: string, imageName: string) => {
-  if (!imageUri) throw new Error("No image provided");
+export const uploadDocument = async (
+  documentUri: string,
+  documentName: string,
+) => {
+  if (!documentUri) throw new Error("No image provided");
 
   try {
     const formData = new FormData();
-    const fileName = imageName ? imageName : "new_image";
+    const fileName = documentName ? documentName : "new_document";
     console.log(fileName);
     formData.append("file", {
-      uri: imageUri,
+      uri: documentUri,
       name: fileName,
-      type: "image/jpeg",
+      type: "model/gltf-binary",
     } as any);
 
     const response = await fetch(
@@ -27,7 +30,7 @@ export const uploadImage = async (imageUri: string, imageName: string) => {
     );
 
     if (!response.ok) {
-      throw new Error("Upload image error");
+      throw new Error("Upload document error");
     }
 
     const { data: publicData } = supabase.storage

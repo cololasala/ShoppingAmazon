@@ -3,15 +3,18 @@ import DeliveryLocation from "@/components/shared/DeliveryLocation";
 import { HeaderTabsProps } from "@/components/shared/header/HeaderTabs";
 import HomeCarousel from "@/components/shared/Screen/HomeCarousel";
 import HomeSuggestions from "@/components/shared/Screen/HomeSuggestions";
-import { deals } from "@/dummy_data/product_deal";
+import { supabase } from "@/lib/supabase";
+import { showToastError } from "@/services/toastService";
 import { RootState } from "@/store/store";
 import { Product } from "@/types/product";
-import { AmazonEmberBold } from "@/utils/constants/constants";
+import { AmazonEmber, AmazonEmberBold } from "@/utils/constants/constants";
+import { productMapper, ProductResponse } from "@/utils/mappers/productMapper";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { router } from "expo-router";
 import { useNavigation } from "expo-router/build/exports";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Image,
@@ -27,6 +30,8 @@ const Home = () => {
   const navigation = useNavigation();
   const tabBarHeight = useBottomTabBarHeight();
   const userLogged = useSelector((state: RootState) => state.Auth.session);
+  const [deals, setDeals] = useState<Product[] | []>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const tabs: HeaderTabsProps["tabs"] = [
     {
       title: "List",
@@ -50,7 +55,11 @@ const Home = () => {
       headerSearchShown: true,
       headerTabsProps: { tabs },
     });
-  });
+  }, []);
+
+  useEffect(() => {
+    getProductsDeals();
+  }, []);
 
   const onProductPress = ({ id }: Product) => {
     router.push(`/product/${id}` as any);
@@ -58,6 +67,91 @@ const Home = () => {
 
   const onPressSignIn = () => {
     router.push("/(auth)/signIn");
+  };
+
+  const getProductsDeals = async () => {
+    setLoading(true);
+    try {
+      const { data = [] } = await supabase.from("products").select("*");
+      const dataMapped = productMapper(data as ProductResponse[]);
+      setDeals(dataMapped);
+    } catch (error) {
+      showToastError("Error", "Error obtain deals");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const dealsContent = () => {
+    if (loading)
+      return (
+        <ActivityIndicator
+          color="#f8ab05ff"
+          size={34}
+          style={{ marginTop: 20 }}
+        ></ActivityIndicator>
+      );
+
+    if (userLogged) {
+      return deals.length > 0 ? (
+        <>
+          <Text style={styles.containerText}>Deals for you</Text>
+          <FlatList
+            data={deals}
+            numColumns={3}
+            scrollEnabled={false}
+            contentContainerStyle={{
+              marginTop: 10,
+              width: "100%",
+            }}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  marginBottom: 10,
+                  padding: 8,
+                }}
+              >
+                <Pressable onPress={() => onProductPress(item)}>
+                  <Text>{item.name}</Text>
+                  <Text>${item.currentPrice.toFixed(2)}</Text>
+                  <Image
+                    source={{ uri: item.imageUrl! }}
+                    style={{ width: 80, height: 80 }}
+                  />
+                </Pressable>
+              </View>
+            )}
+          />
+        </>
+      ) : (
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: AmazonEmber,
+            textAlign: "center",
+          }}
+        >
+          Not deals at the moment
+        </Text>
+      );
+    } else {
+      return (
+        <>
+          <Text
+            style={[
+              styles.containerText,
+              { textAlign: "center", paddingBottom: 12 },
+            ]}
+          >
+            Sign in to see personalized recommendations
+          </Text>
+          <DefaultButton variant="primary" onPress={onPressSignIn}>
+            Sign In
+          </DefaultButton>
+        </>
+      );
+    }
   };
 
   return (
@@ -72,54 +166,7 @@ const Home = () => {
       <HomeCarousel />
       <HomeSuggestions />
 
-      <View style={styles.container}>
-        {userLogged ? (
-          <>
-            <Text style={styles.containerText}>Deals for you</Text>
-            <FlatList
-              data={deals}
-              numColumns={3}
-              scrollEnabled={false}
-              contentContainerStyle={{
-                marginTop: 10,
-                width: "100%",
-              }}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <View
-                  style={{
-                    marginBottom: 10,
-                    padding: 8,
-                  }}
-                >
-                  <Pressable onPress={() => onProductPress(item)}>
-                    <Text>{item.name}</Text>
-                    <Text>${item.currentPrice.toFixed(2)}</Text>
-                    <Image
-                      source={{ uri: item.imageUrl! }}
-                      style={{ width: 80, height: 80 }}
-                    />
-                  </Pressable>
-                </View>
-              )}
-            />
-          </>
-        ) : (
-          <>
-            <Text
-              style={[
-                styles.containerText,
-                { textAlign: "center", paddingBottom: 12 },
-              ]}
-            >
-              Sign in to see personalized recommendations
-            </Text>
-            <DefaultButton variant="primary" onPress={onPressSignIn}>
-              Sign In
-            </DefaultButton>
-          </>
-        )}
-      </View>
+      <View style={styles.container}>{dealsContent()}</View>
     </ScrollView>
   );
 };

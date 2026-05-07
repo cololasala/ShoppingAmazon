@@ -1,6 +1,10 @@
 import DefaultButton from "@/components/shared/DefaultButton";
+import { supabase } from "@/lib/supabase";
+import { showToastError, showToastSuccess } from "@/services/toastService";
 import { RootState } from "@/store/store";
 import { AmazonEmber } from "@/utils/constants/constants";
+import { uploadDocument } from "@/utils/uploadDocument";
+import { uploadImage } from "@/utils/uploadImage";
 import {
   AntDesign,
   Feather,
@@ -10,6 +14,7 @@ import {
 import { Checkbox } from "expo-checkbox";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Image,
@@ -84,7 +89,40 @@ const CreateProduct = () => {
   };
 
   const createProduct = async () => {
-    //TODO:
+    setLoading(true);
+    try {
+      const imageUrl = imageFile
+        ? await uploadImage(imageFile?.uri!, imageFile?.name!)
+        : null;
+      const documentUrl = documentFile
+        ? await uploadDocument(documentFile?.uri!, documentFile?.name!)
+        : null;
+      const { data, error } = await supabase.from("products").insert([
+        {
+          name,
+          amount_in_stock: Number(amountInStock),
+          current_price: Number(currentPrice),
+          previous_price: Number(previousPrice),
+          delivery_price: Number(deliveryPrice),
+          delivery_in_days: Number(deliveryInDays),
+          is_amazon_choice: isAmazonChoice,
+          image_url: imageUrl ?? null,
+          model_3d_url: documentUrl ?? null,
+          user_id: userLogged?.user.id,
+        },
+      ]);
+      if (error) {
+        showToastError("Error", "Create product error");
+        return;
+      }
+      showToastSuccess("Succes", "Product added successfully!");
+      router.back();
+    } catch (error) {
+      console.warn(error);
+      showToastError("Error", "Create product error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

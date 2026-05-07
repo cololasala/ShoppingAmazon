@@ -1,14 +1,14 @@
 import { AmazonEmber } from "@/utils/constants/constants";
 import {
-  BaseToast,
   BaseToastProps,
   ErrorToast,
   InfoToast,
+  SuccessToast
 } from "react-native-toast-message";
 
 export const toastConfig = {
   success: (props: BaseToastProps) => (
-    <BaseToast
+    <SuccessToast
       {...props}
       contentContainerStyle={{ paddingHorizontal: 15 }}
       text1Style={{
