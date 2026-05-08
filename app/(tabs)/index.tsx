@@ -62,7 +62,7 @@ const Home = () => {
   }, []);
 
   const onProductPress = ({ id }: Product) => {
-    router.push(`/product/${id}` as any);
+    router.push(`/product/${id}`);
   };
 
   const onPressSignIn = () => {

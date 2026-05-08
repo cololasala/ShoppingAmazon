@@ -12,7 +12,8 @@ const SearchLayout = () => {
         } as StackHeaderProps["options"]
       }
     >
-      <Stack.Screen name="index" />
+      <Stack.Screen name="product/[id]" />
+      <Stack.Screen name="search" />
     </Stack>
   );
 };

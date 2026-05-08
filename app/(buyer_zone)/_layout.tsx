@@ -30,6 +30,15 @@ const BuyerZoneLayout = () => {
           headerTitle: () => <HeaderTitle />,
         }}
       />
+      <Stack.Screen
+        name="buyHere"
+        options={{
+          headerShown: true,
+          header: (props) => <Header {...props} />,
+          headerLeft: () => <HeaderLeftBack onPress={handleBackPress} />,
+          headerTitle: () => <HeaderTitle />,
+        }}
+      />
     </Stack>
   );
 };
