@@ -48,8 +48,6 @@ const Location = () => {
   useFocusEffect(
     useCallback(() => {
       getInfoLocation();
-
-      return () => {};
     }, []),
   );
 

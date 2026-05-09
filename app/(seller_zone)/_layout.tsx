@@ -1,12 +1,14 @@
 import Header from "@/components/shared/header/Header";
 import {
-    HeaderLeftBack,
-    HeaderTitle,
+  HeaderLeftBack,
+  HeaderTitle,
 } from "@/components/shared/header/HeaderTitleBack";
+import { RootState } from "@/store/store";
 import Icon from "@expo/vector-icons/Entypo";
 import { router, Tabs } from "expo-router";
 import React from "react";
 import { View } from "react-native";
+import { useSelector } from "react-redux";
 
 interface Tab {
   name: string;
@@ -14,6 +16,10 @@ interface Tab {
 }
 
 const SellerZoneLayout = () => {
+  const shippedCount = useSelector(
+    (state: RootState) => state.ShippedCount.count,
+  );
+
   const tabs: Tab[] = [
     {
       name: "sellerPage",
@@ -68,6 +74,10 @@ const SellerZoneLayout = () => {
                 />
               </View>
             ),
+            tabBarBadge:
+              tab.icon === "archive" && shippedCount > 0
+                ? shippedCount
+                : undefined,
           }}
         />
       ))}

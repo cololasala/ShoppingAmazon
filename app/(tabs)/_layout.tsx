@@ -1,8 +1,12 @@
 import Headers from "@/components/shared/header/Header";
+import { setShippedCount } from "@/store/slices/shippedCountSlice";
+import { RootState } from "@/store/store";
+import { getUnshippedCount } from "@/utils/getUnshippedCount";
 import MCIcon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 interface ITabs {
   name: string;
@@ -16,6 +20,26 @@ const TabLayout = () => {
     { name: "cart", icon: "cart-check" },
   ];
   const cartItems = [1, 2, 3]; // Example cart items
+  const userLogged = useSelector((state: RootState) => state.Auth.session);
+  const dispatch = useDispatch();
+
+  const getShippedCount = async () => {
+    try {
+      const count = await getUnshippedCount(userLogged?.user.id);
+      if (count !== null) {
+        dispatch(setShippedCount(count));
+      }
+    } catch (error) {
+      console.warn(error);
+    }
+  };
+
+  useEffect(() => {
+    if (userLogged) {
+      getShippedCount();
+    }
+  }, [userLogged?.user.id]);
+
   return (
     <Tabs>
       {tabs.map((tab) => (

@@ -5,7 +5,8 @@ import { showToastError } from "@/services/toastService";
 import { RootState } from "@/store/store";
 import { Order } from "@/types/order";
 import { AmazonEmber } from "@/utils/constants/constants";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
@@ -34,9 +35,11 @@ const ProductOrdered = () => {
     }
   };
 
-  useEffect(() => {
-    getProductOrders();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getProductOrders();
+    }, []),
+  );
 
   if (loading) return <CustomActivityIndicator />;
 

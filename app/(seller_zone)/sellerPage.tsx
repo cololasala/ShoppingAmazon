@@ -40,8 +40,6 @@ const SellerPage = () => {
   useFocusEffect(
     useCallback(() => {
       getProducts();
-
-      return () => {};
     }, []),
   );
 

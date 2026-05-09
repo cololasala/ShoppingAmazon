@@ -29,6 +29,7 @@ const App = () => {
 
     return () => subscription?.unsubscribe();
   }, [dispatch]);
+
   return <Redirect href="/(tabs)" />;
 };
 

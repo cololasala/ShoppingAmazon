@@ -50,32 +50,46 @@ const ProductPage = () => {
   };
 
   const openModalQuantity = () => {
+    //Array based in quantity
+    const availableQuantity = Array.from(
+      { length: product?.amountInStock! },
+      (_, index) => (index + 1).toString(),
+    );
     showModal(
       "Select quantity",
-      ["1", "2", "3", "4", "5"].map((quantity: any) => (
-        <TouchableOpacity
-          key={quantity}
-          style={{
-            borderColor: "gray",
-            backgroundColor: "lightgray",
-            borderRadius: 8,
-            borderWidth: 1,
-            marginVertical: 4,
-            padding: 10,
-          }}
-          onPress={() => onSelectQuantity(quantity)}
-        >
-          <Text
-            style={{
-              fontFamily: AmazonEmber,
-              fontSize: 16,
-              textAlign: "center",
-            }}
-          >
-            {quantity}
-          </Text>
-        </TouchableOpacity>
-      )),
+      <ScrollView
+        scrollEnabled={true}
+        showsVerticalScrollIndicator={true}
+        contentContainerStyle={{ flexGrow: 1 }}
+        style={{ maxHeight: 250 }}
+      >
+        <View>
+          {availableQuantity.map((quantity: any) => (
+            <TouchableOpacity
+              key={quantity}
+              style={{
+                borderColor: "gray",
+                backgroundColor: "lightgray",
+                borderRadius: 8,
+                borderWidth: 1,
+                marginVertical: 4,
+                padding: 10,
+              }}
+              onPress={() => onSelectQuantity(quantity)}
+            >
+              <Text
+                style={{
+                  fontFamily: AmazonEmber,
+                  fontSize: 16,
+                  textAlign: "center",
+                }}
+              >
+                {quantity}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>,
     );
   };
 
