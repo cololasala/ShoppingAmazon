@@ -45,7 +45,7 @@ const SellerProductCard = ({
       <View style={styles.container}>
         <Image
           source={{ uri: product.imageUrl! }}
-          style={{ width: 55, height: 55 }}
+          style={{ width: 55, height: 55, borderRadius: 8 }}
         />
         <Text
           style={[

@@ -66,7 +66,7 @@ const BuyHere = () => {
         .select();
       if (!error) {
         showToastSuccess("Success", "Product ordered successfully");
-        // router.push("/(buyer_zone)/thanks_buying");
+        router.push("/(buyer_zone)/thanksBuying");
       }
     } catch (error) {
       showToastError("Error", "Error when order product");
@@ -121,7 +121,7 @@ const BuyHere = () => {
           justifyContent: "space-between",
           padding: 20,
           backgroundColor: "#e5e5e5ff",
-          height: 190,
+          height: 205,
           borderRadius: 20,
         }}
       >

@@ -1,12 +1,66 @@
-import React from "react";
-import { Text, View } from "react-native";
+import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator";
+import MyOrderedCard from "@/components/shared/MyOrderedCard";
+import { supabase } from "@/lib/supabase";
+import { showToastError } from "@/services/toastService";
+import { RootState } from "@/store/store";
+import { Order } from "@/types/order";
+import { AmazonEmber } from "@/utils/constants/constants";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { useSelector } from "react-redux";
 
 const ProductOrdered = () => {
+  const userLogged = useSelector((state: RootState) => state.Auth.session);
+  const [orders, setOrders] = useState<Order[] | []>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const getProductOrders = async () => {
+    setLoading(true);
+    try {
+      const { data = [], error } = await supabase
+        .from("orders")
+        .select("*")
+        .eq("seller_id", userLogged?.user?.id)
+        .order("created_at", { ascending: false });
+      if (error) {
+        showToastError("Error", "Error when retrieving orders");
+        return;
+      }
+      setOrders(data as Order[]);
+    } catch (error) {
+      showToastError("Error", "Error when retrieving orders");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getProductOrders();
+  }, []);
+
+  if (loading) return <CustomActivityIndicator />;
+
   return (
-    <View>
-      <Text>ProductOrdered</Text>
+    <View style={styles.mainContainer}>
+      <Text style={styles.productsOrderText}>My products order</Text>
+
+      {orders.map((order) => (
+        <MyOrderedCard key={order.id} order={order} />
+      ))}
     </View>
   );
 };
 
 export default ProductOrdered;
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    marginTop: 10,
+    paddingHorizontal: 20,
+  },
+  productsOrderText: {
+    fontFamily: AmazonEmber,
+    fontSize: 18,
+  },
+});
