@@ -1,6 +1,7 @@
+import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator";
 import { CustomModalProvider } from "@/components/shared/CustomModal/CustomModalProvider";
 import { toastConfig } from "@/config/toastConfig";
-import { store } from "@/store/store";
+import { persistor, store } from "@/store/newStore"; // use new store
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
@@ -9,6 +10,7 @@ import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,16 +36,21 @@ const RootLayout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
-        <BottomSheetModalProvider>
-          <CustomModalProvider>
-            <StatusBar style="auto" />
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="index" />
-              <Stack.Screen name="(tabs)" />
-            </Stack>
-          </CustomModalProvider>
-        </BottomSheetModalProvider>
-        <Toast config={toastConfig} />
+        <PersistGate
+          persistor={persistor}
+          loading={<CustomActivityIndicator />}
+        >
+          <BottomSheetModalProvider>
+            <CustomModalProvider>
+              <StatusBar style="auto" />
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="(tabs)" />
+              </Stack>
+            </CustomModalProvider>
+          </BottomSheetModalProvider>
+          <Toast config={toastConfig} />
+        </PersistGate>
       </Provider>
     </GestureHandlerRootView>
   );
