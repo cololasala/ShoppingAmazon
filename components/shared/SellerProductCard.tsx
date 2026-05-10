@@ -42,7 +42,7 @@ const SellerProductCard = ({
 
   return (
     <View style={styles.mainContainer}>
-      <View style={styles.container}>
+      <View style={[styles.container, { width: "40%" }]}>
         <Image
           source={{ uri: product.imageUrl! }}
           style={{ width: 55, height: 55, borderRadius: 8 }}
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     gap: 8,
-    width: "50%",
   },
   descriptionText: {
     fontFamily: AmazonEmber,
