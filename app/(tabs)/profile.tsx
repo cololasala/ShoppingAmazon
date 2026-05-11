@@ -4,7 +4,7 @@ import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
 import { RootState } from "@/store/newStore";
 import { setSession } from "@/store/slices/authSlice";
-import { AmazonEmber } from "@/utils/constants/constants";
+import { AmazonEmber, AmazonEmberBold } from "@/utils/constants/constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { router, useNavigation } from "expo-router";
@@ -23,6 +23,7 @@ const Profile = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log(userLogged?.user);
     navigation.setOptions({
       headerSearchShown: Boolean(userLogged),
       headerLeft: userLogged
@@ -152,17 +153,35 @@ const Profile = () => {
         ref={bottomSheetRef}
         title={"My account"}
         panDownClose={false}
+        snapPoints={["35%"]}
         content={
-          <>
-            <Text style={{ fontFamily: AmazonEmber }}>Account</Text>
+          <View
+            style={{
+              justifyContent: "space-between",
+              gap: 30,
+            }}
+          >
+            <View>
+              <Text style={{ fontFamily: AmazonEmberBold, fontSize: 16 }}>
+                Account user info
+              </Text>
+              <Text style={{ fontFamily: AmazonEmber, fontSize: 16 }}>
+                User: {userLogged?.user.email}
+              </Text>
+              <Text style={{ fontFamily: AmazonEmber, fontSize: 16 }}>
+                Role: {isSeller ? "Seller" : "Buyer"}
+              </Text>
+            </View>
             <DefaultButton
               variant="primary"
               onPress={onPressSignOut}
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+              }}
             >
               Sign out
             </DefaultButton>
-          </>
+          </View>
         }
       />
     </>

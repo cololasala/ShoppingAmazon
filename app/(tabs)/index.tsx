@@ -10,25 +10,23 @@ import { RootState } from "@/store/newStore";
 import { Product } from "@/types/product";
 import { AmazonEmber, AmazonEmberBold } from "@/utils/constants/constants";
 import { productMapper, ProductResponse } from "@/utils/mappers/productMapper";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { router } from "expo-router";
 import { useNavigation } from "expo-router/build/exports";
 import React, { useEffect, useState } from "react";
 import {
-    Alert,
-    FlatList,
-    Image,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Alert,
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { useSelector } from "react-redux";
 
 const Home = () => {
   const navigation = useNavigation();
-  const tabBarHeight = useBottomTabBarHeight();
   const userLogged = useSelector((state: RootState) => state.Auth.session);
   const [deals, setDeals] = useState<Product[] | []>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -156,14 +154,21 @@ const Home = () => {
       scrollEnabled={true}
       showsVerticalScrollIndicator={true}
       contentContainerStyle={{
-        paddingBottom: tabBarHeight,
+        paddingBottom: 24,
       }}
     >
-      <DeliveryLocation />
+      {userLogged && <DeliveryLocation />}
       <HomeCarousel />
       <HomeSuggestions />
 
-      <View style={styles.container}>{dealsContent()}</View>
+      <View
+        style={[
+          styles.container,
+          userLogged ? { marginTop: "55%" } : { marginTop: "75%" },
+        ]}
+      >
+        {dealsContent()}
+      </View>
     </ScrollView>
   );
 };
@@ -172,7 +177,6 @@ export default Home;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: "55%",
     backgroundColor: "white",
     width: "100%",
     padding: 20,

@@ -47,7 +47,7 @@ const BuyHere = () => {
 
   const onOrderProduct = async () => {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("orders")
         .insert([
           {
@@ -142,7 +142,7 @@ const BuyHere = () => {
           <Text
             style={{ fontSize: 15, marginTop: 10 }}
           >{`$ ${Number(currentPrice).toFixed(2)}`}</Text>
-          <Text>{`Delivery Charges: $ ${Number(deliveryCharge).toFixed(2)}`}</Text>
+          <Text>{`Delivery Charges: $${Number(deliveryCharge).toFixed(2)}`}</Text>
           <Text style={{ fontSize: 15, marginTop: 10 }}>{`Sub Total: $${(
             Number(deliveryPrice) * Number(quantity)
           ).toFixed(2)}`}</Text>

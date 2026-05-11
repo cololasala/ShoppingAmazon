@@ -19,7 +19,7 @@ const TabLayout = () => {
     { name: "profile", icon: "account-outline" },
     { name: "cart", icon: "cart-check" },
   ];
-  const cartItems = [1, 2, 3]; // Example cart items
+  const cartItems = useSelector((state: RootState) => state.Cart.items); // Example cart items
   const userLogged = useSelector((state: RootState) => state.Auth.session);
   const dispatch = useDispatch();
 
@@ -80,7 +80,7 @@ const TabLayout = () => {
               </View>
             ),
             tabBarBadge:
-              tab.name === "cart" && cartItems.length > 0
+              tab.name === "cart" && userLogged && cartItems.length > 0
                 ? cartItems.length
                 : undefined,
           }}

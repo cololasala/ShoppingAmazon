@@ -38,7 +38,9 @@ export const CustomModalProvider = ({ children }: { children: ReactNode }) => {
         onBackdropPress={hideModal}
         onBackButtonPress={hideModal}
         animationIn="fadeInUp"
-        animationOut="fadeOutDown"
+        useNativeDriver={true}
+        hideModalContentWhileAnimating={true}
+        backdropTransitionOutTiming={0}
       >
         <View
           style={{ backgroundColor: "white", padding: 20, borderRadius: 12 }}
