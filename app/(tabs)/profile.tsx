@@ -2,8 +2,8 @@ import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator
 import CustomBottomSheet from "@/components/shared/CustomBottomSheet";
 import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
+import { RootState } from "@/store/newStore";
 import { setSession } from "@/store/slices/authSlice";
-import { RootState } from "@/store/store";
 import { AmazonEmber } from "@/utils/constants/constants";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import BottomSheet from "@gorhom/bottom-sheet";
@@ -41,7 +41,7 @@ const Profile = () => {
   };
 
   const onPressSellerZone = () => {
-    router.push("/(seller_zone)/sellerPage" as any);
+    router.push("/(seller_zone)/sellerPage");
   };
 
   const onPressSignIn = () => {

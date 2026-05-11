@@ -1,7 +1,7 @@
 import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
 import { showToastError, showToastSuccess } from "@/services/toastService";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/newStore";
 import { AmazonEmber } from "@/utils/constants/constants";
 import { deliveryDate } from "@/utils/deliveryDate";
 import { router, useLocalSearchParams } from "expo-router";
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   deliveryLocation: { fontFamily: AmazonEmber, fontSize: 18, marginTop: 6 },
   changeAddressText: {
     textDecorationLine: "underline",
-    color: "#3434bcff",
+    color: "rgb(17, 159, 211)",
     fontFamily: AmazonEmber,
     marginTop: 8,
   },

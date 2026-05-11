@@ -18,9 +18,10 @@ const initialState: CartState = {
 
 const calculateSubtotal = (items: CartItem[]) => {
   return Number(
-    items
-      .reduce((acc, item) => acc + item.product.currentPrice + item.quantity, 0)
-      .toFixed(2),
+    items.reduce(
+      (acc, item) => acc + item.product.currentPrice * item.quantity,
+      0,
+    ),
   );
 };
 
@@ -34,7 +35,8 @@ const cartSlice = createSlice({
         (item) => item.product.id === product.id,
       );
       if (existingItem) {
-        existingItem.quantity += quantity;
+        existingItem.quantity =
+          Number(existingItem.quantity) + Number(quantity);
       } else {
         //state.items.push(action.payload);
         state.items = [...state.items, action.payload];
@@ -46,13 +48,14 @@ const cartSlice = createSlice({
       const existingItem = state.items.find(
         (item) => item.product.id === product.id,
       );
+
       if (!existingItem) return;
 
       if (existingItem.quantity > quantity) {
         existingItem.quantity -= quantity;
       } else {
         state.items = state.items.filter(
-          (item) => item.product.id === product.id,
+          (item) => item.product.id !== product.id,
         );
       }
       state.subtotal = calculateSubtotal(state.items);

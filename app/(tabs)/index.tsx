@@ -6,7 +6,7 @@ import HomeCarousel from "@/components/shared/Screen/HomeCarousel";
 import HomeSuggestions from "@/components/shared/Screen/HomeSuggestions";
 import { supabase } from "@/lib/supabase";
 import { showToastError } from "@/services/toastService";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/newStore";
 import { Product } from "@/types/product";
 import { AmazonEmber, AmazonEmberBold } from "@/utils/constants/constants";
 import { productMapper, ProductResponse } from "@/utils/mappers/productMapper";
@@ -15,14 +15,14 @@ import { router } from "expo-router";
 import { useNavigation } from "expo-router/build/exports";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
-  FlatList,
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
+    Alert,
+    FlatList,
+    Image,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
 } from "react-native";
 import { useSelector } from "react-redux";
 

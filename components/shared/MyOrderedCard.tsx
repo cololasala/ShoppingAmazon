@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import { showToastError } from "@/services/toastService";
+import { RootState } from "@/store/newStore";
 import { setShippedCount } from "@/store/slices/shippedCountSlice";
-import { RootState } from "@/store/store";
 import { Order } from "@/types/order";
 import { AmazonEmber, AmazonEmberBold } from "@/utils/constants/constants";
 import { getUnshippedCount } from "@/utils/getUnshippedCount";

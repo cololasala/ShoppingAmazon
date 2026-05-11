@@ -1,6 +1,6 @@
 import Headers from "@/components/shared/header/Header";
+import { RootState } from "@/store/newStore";
 import { setShippedCount } from "@/store/slices/shippedCountSlice";
-import { RootState } from "@/store/store";
 import { getUnshippedCount } from "@/utils/getUnshippedCount";
 import MCIcon from "@expo/vector-icons/MaterialCommunityIcons";
 import { Tabs } from "expo-router";

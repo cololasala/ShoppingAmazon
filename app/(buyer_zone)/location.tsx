@@ -1,7 +1,7 @@
 import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
 import { showToastError, showToastSuccess } from "@/services/toastService";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/newStore";
 import { AmazonEmber } from "@/utils/constants/constants";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";

@@ -6,9 +6,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 const DeliveryLocation = () => {
   return (
-    <TouchableOpacity
-      onPress={() => router.push("/(buyer_zone)/location" as any)}
-    >
+    <TouchableOpacity onPress={() => router.push("/(buyer_zone)/location")}>
       <View
         style={{
           backgroundColor: "#c7e8f0",

@@ -3,7 +3,7 @@ import {
   HeaderLeftBack,
   HeaderTitle,
 } from "@/components/shared/header/HeaderTitleBack";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/newStore";
 import Icon from "@expo/vector-icons/Entypo";
 import { router, Tabs } from "expo-router";
 import React from "react";

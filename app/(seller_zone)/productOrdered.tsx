@@ -2,7 +2,7 @@ import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator
 import MyOrderedCard from "@/components/shared/MyOrderedCard";
 import { supabase } from "@/lib/supabase";
 import { showToastError } from "@/services/toastService";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/newStore";
 import { Order } from "@/types/order";
 import { AmazonEmber } from "@/utils/constants/constants";
 import { useFocusEffect } from "expo-router";

@@ -12,7 +12,7 @@ const HeaderSearch = () => {
 
   const onPressIn = () => {
     //prevent re-navigate when is preessed
-    if (segments[0] !== "(search)") router.push("/(search)/search" as any);
+    if (segments[0] !== "(search)") router.push("/(search)/search");
   };
 
   const onGoBack = () => {

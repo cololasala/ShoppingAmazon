@@ -1,7 +1,7 @@
 import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
 import { showToastError, showToastSuccess } from "@/services/toastService";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/newStore";
 import { AmazonEmber } from "@/utils/constants/constants";
 import { uploadDocument } from "@/utils/uploadDocument";
 import { uploadImage } from "@/utils/uploadImage";
@@ -65,7 +65,6 @@ const CreateProduct = () => {
       selectionLimit: 1,
     });
     if (!result.canceled) {
-      console.log(result.assets[0]);
       const { uri, fileName, mimeType } = result.assets[0];
       setImageFile({
         uri,

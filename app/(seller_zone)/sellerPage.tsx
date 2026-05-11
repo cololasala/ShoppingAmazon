@@ -2,7 +2,7 @@ import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator
 import DefaultButton from "@/components/shared/DefaultButton";
 import SellerProductCard from "@/components/shared/SellerProductCard";
 import { supabase } from "@/lib/supabase";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/newStore";
 import { Product } from "@/types/product";
 import { AmazonEmber } from "@/utils/constants/constants";
 import { productMapper, ProductResponse } from "@/utils/mappers/productMapper";

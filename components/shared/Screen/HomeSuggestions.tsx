@@ -61,9 +61,7 @@ const renderItem = ({ item }: { item: any }) => (
       source={item}
       style={{
         width: "100%",
-        height: 150,
-        borderBottomLeftRadius: 4,
-        borderBottomRightRadius: 4,
+        height: 160,
       }}
     />
   </View>
@@ -73,7 +71,7 @@ export default function HomeSuggestions() {
   return (
     <View
       style={{
-        height: 210,
+        height: 225,
         width: Dimensions.get("window").width,
         position: "absolute",
         top: 230,

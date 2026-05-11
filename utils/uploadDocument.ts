@@ -9,7 +9,6 @@ export const uploadDocument = async (
   try {
     const formData = new FormData();
     const fileName = documentName ? documentName : "new_document";
-    console.log(fileName);
     formData.append("file", {
       uri: documentUri,
       name: fileName,

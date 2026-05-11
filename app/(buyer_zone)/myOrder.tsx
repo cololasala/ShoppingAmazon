@@ -2,7 +2,7 @@ import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator
 import OrderCard from "@/components/shared/OrderCard";
 import { supabase } from "@/lib/supabase";
 import { showToastError } from "@/services/toastService";
-import { RootState } from "@/store/store";
+import { RootState } from "@/store/newStore";
 import { Order } from "@/types/order";
 import { AmazonEmber } from "@/utils/constants/constants";
 import React, { useEffect, useState } from "react";

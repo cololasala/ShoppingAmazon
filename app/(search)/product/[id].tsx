@@ -2,7 +2,8 @@ import CustomActivityIndicator from "@/components/shared/CustomActivityIndicator
 import { useCustomModal } from "@/components/shared/CustomModal/useCustomModal";
 import DefaultButton from "@/components/shared/DefaultButton";
 import { supabase } from "@/lib/supabase";
-import { showToastError } from "@/services/toastService";
+import { showToastError, showToastSuccess } from "@/services/toastService";
+import { addCartItem } from "@/store/slices/cartSlice";
 import { Product } from "@/types/product";
 import { AmazonEmber, AmazonEmberBold } from "@/utils/constants/constants";
 import { deliveryDate } from "@/utils/deliveryDate";
@@ -19,12 +20,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
 const ProductPage = () => {
   const { id } = useLocalSearchParams();
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState<boolean>(true);
   const [quantity, setQuantity] = useState<number>(1);
+  const dispatch = useDispatch();
   const { showModal, hideModal } = useCustomModal();
 
   const getProduct = async () => {
@@ -49,8 +52,13 @@ const ProductPage = () => {
     hideModal();
   };
 
+  const onPressAddToCart = () => {
+    if (product) dispatch(addCartItem({ product, quantity }));
+    showToastSuccess("Success", "Product added to the cart");
+  };
+
   const openModalQuantity = () => {
-    //Array based in quantity
+    //Array based in quantity, example ["1", "2", "3"]
     const availableQuantity = Array.from(
       { length: product?.amountInStock! },
       (_, index) => (index + 1).toString(),
@@ -166,8 +174,8 @@ const ProductPage = () => {
               <MIcon name="chevron-down" size={22} />
             </TouchableOpacity>
 
-            <DefaultButton variant="primary" onPress={() => {}}>
-              Add to basket
+            <DefaultButton variant="primary" onPress={onPressAddToCart}>
+              Add to cart
             </DefaultButton>
             <DefaultButton
               style={{ backgroundColor: "#f97316" }}

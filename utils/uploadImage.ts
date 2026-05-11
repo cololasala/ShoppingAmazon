@@ -6,7 +6,6 @@ export const uploadImage = async (imageUri: string, imageName: string) => {
   try {
     const formData = new FormData();
     const fileName = imageName ? imageName : "new_image";
-    console.log(fileName);
     formData.append("file", {
       uri: imageUri,
       name: fileName,
