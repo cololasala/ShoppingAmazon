@@ -45,11 +45,16 @@ const ProductOrdered = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <Text style={styles.productsOrderText}>My products order</Text>
-
-      {orders.map((order) => (
-        <MyOrderedCard key={order.id} order={order} />
-      ))}
+      {orders.length > 0 ? (
+        <>
+          <Text style={styles.productsOrderText}>My products order</Text>
+          {orders.map((order) => (
+            <MyOrderedCard key={order.id} order={order} />
+          ))}
+        </>
+      ) : (
+        <Text style={styles.productsOrderText}>No orders at moment</Text>
+      )}
     </View>
   );
 };

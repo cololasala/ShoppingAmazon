@@ -48,17 +48,20 @@ const SellerPage = () => {
       <DefaultButton variant="primary" onPress={onPressCreateProduct}>
         Create a product
       </DefaultButton>
-
       <View>
-        <Text style={styles.title}>My products</Text>
         {!loading ? (
-          products.map((product) => (
-            <SellerProductCard
-              key={product.id}
-              product={product}
-              onDeleteProduct={getProducts}
-            />
-          ))
+          products.length > 0 ? (
+            <>
+              <Text style={styles.title}>My products</Text>
+              {products.map((product) => (
+                <SellerProductCard
+                  key={product.id}
+                  product={product}
+                  onDeleteProduct={getProducts}
+                />
+              ))}
+            </>
+          ) : null
         ) : (
           <CustomActivityIndicator />
         )}
