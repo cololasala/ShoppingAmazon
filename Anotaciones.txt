@@ -1,0 +1,47 @@
+https://www.youtube.com/watch?v=QE1UPaGl6wI
+Icons -> https://icons.expo.fyi/Index
+
+Siempre instalar paquetes con -> npx expo install "nombre paquete"
+
+-----------------------------------------------------------------------------
+Headers:
+En Stack puedo tener el propio header, o si se quiere por cada Stack.screen un header diferente
+En caso de que se use Tabs el header se setea en las options de los Tabs.Screen 
+
+Supabase
+https://supabase.com/docs/guides/getting-started/quickstarts/expo-react-native
+https://supabase.com/dashboard/project/aojsexokjktfjzsspsal/editor/17563 -> proyecto
+Provee base de datos, manejo de auth, storage para guardar files estaticos y otras funciones.
+Cree cuenta con GitHub
+Usar navegador Microsoft Edge para evitar CORS
+clave DB -> pepegrillo#1234567
+
+Para permitir actualizar la data necesitamos darle policyes al nuestra tabla "products". Creamos también un buckets en sección
+"Storage" para el guardado de imágenes (también le creamos una custom policie, para poder usarlo).
+
+Usamos la validación OTP 
+La validación OTP (del inglés One-Time Password o Contraseña de un Solo Uso) es un mecanismo de seguridad que genera una clave numérica o alfanumérica válida para una única sesión o transacción.
+Nostros la usamos para registrar un usuario.
+Usamos Luciano.lasala123@gmail.com con clave -> pepeto
+-----------------------------------------------------------------------------
+Usamos Redux toolkit para manejo de redux
+npx expo install @reduxjs/toolkit
+npx expo install react-redux
+
+npx expo install @react-native-async-storage/async-storage
+
+-----------------------------------------------------------------------------
+En app.json se agregaron configs para usar expo-image-picker (un mensaje) y expo-document-picker (en este caso es algo para iOS)
+
+https://supabase.com/dashboard/project/aojsexokjktfjzsspsal/storage/files/buckets/user_data
+
+Se instalo -> npx expo install redux-persist, para persistir data con el AsyncStorage y ponerla en redux. Se creo un archivo newStore para
+configurar y usar esto. El otro archivo store.ts (es como se usaba redux antes de instalar este paquete).
+
+Acciones propias de redux-persist:
+PERSIST	-> Empieza persistencia
+REHYDRATE -> Recupera estado guardado
+PAUSE -> Pausa persistencia
+FLUSH -> Guarda pendiente inmediatamente
+PURGE -> Borra storage persistido
+REGISTER -> Registra reducers persistentes
